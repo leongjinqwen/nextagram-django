@@ -26,7 +26,8 @@ def create():
         new_user.save()
         flash('Success!', "success")
 
-    except error as e:
+    except Exception as e:
+        print(e)
         flash("An error occurred!", "danger")
 
     return redirect(url_for("users.new"))

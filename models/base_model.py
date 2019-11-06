@@ -10,13 +10,13 @@ class BaseModel(pw.Model):
 
     def save(self, *args, **kwargs):
         self.errors = []
-        self.validate()
+        self.errors.append(self.validate())
 
         if len(self.errors) == 0:
             self.updated_at = datetime.datetime.now()
             return super(BaseModel, self).save(*args, **kwargs)
         else:
-            return 0
+            raise Exception
 
     def validate(self):
         print(
