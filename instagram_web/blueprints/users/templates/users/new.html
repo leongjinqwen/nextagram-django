@@ -1,21 +1,36 @@
-{% extends "_layout.html" %} {% block content %}
+{% extends "_layout.html" %} 
+
+{% block content %}
 <div class="w-100 d-flex flex-column align-items-center my-3">
   <h1 class="my-3">Sign up here!</h1>
   <form action="{{ url_for('users.create') }}" method="POST">
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div class="form-group">
       <label for="email">Email address</label>
-      <input
-        type="email"
-        class="form-control"
-        id="email"
-        name="email"
-        aria-describedby="emailHelp"
-        placeholder="Enter email"
-      />
+      <input 
+        type="email" 
+        class="form-control {% if valid_email %} is-valid {% else %} is-invalid {% endif %}"
+        id="email" 
+        name="email" 
+        aria-describedby="emailHelp" 
+        placeholder="Enter email" />
+
       <small id="emailHelp" class="form-text text-muted"
         >We'll never share your email with anyone else.</small
       >
+
+      {% if valid_email == True %}
+      <div class="valid-feedback">
+        Looks good!
+      </div>
+
+      {% else %}
+      <div class="invalid-feedback">
+        Looks bad!
+      </div>
+      {% endif %}
+
+
     </div>
     <div class="form-group">
       <label for="username">Username</label>
