@@ -8,4 +8,9 @@ class User(BaseModel):
     email = pw.CharField(unique=True)
 
     def validate(self):
-        return len(self.password) >= 6
+        # Password length validation
+        if len(self.password) < 8:
+            self.errors.append(
+                'Password length needs to be at least 8 characters long.')
+
+        # Check if username is unique
