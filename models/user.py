@@ -1,5 +1,7 @@
-from models.base_model import BaseModel
 import peewee as pw
+from werkzeug.security import generate_password_hash
+
+from models.base_model import BaseModel
 
 
 class User(BaseModel):
@@ -12,5 +14,9 @@ class User(BaseModel):
         if len(self.password) < 8:
             self.errors.append(
                 'Password length needs to be at least 8 characters long.')
+        else:
+            self.password = generate_password_hash(self.password)
 
         # Check if username is unique
+        # Check if email is unique?
+        #
