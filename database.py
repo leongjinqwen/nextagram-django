@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 
 def parse_db_url(database_url):
     parsed = urlparse(database_url)
-    print(parsed)
     return {
         'user': parsed.username,
         'password': parsed.password,
@@ -12,9 +11,6 @@ def parse_db_url(database_url):
         'port': parsed.port,
         'database': parsed.path[1:]
     }
-
-
-parse_db_url('postgres://localhost:5432/nextagram_dev/username=username')
 
 
 def return_db():
