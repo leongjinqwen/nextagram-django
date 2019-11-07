@@ -11,9 +11,7 @@ users_blueprint = Blueprint('users',
 
 @users_blueprint.route('/new', methods=['GET'])
 def new():
-    valid_email = bool(int(request.args.get('valid_email')))
-    print('valid', valid_email)
-    print('valid type', type(valid_email))
+    valid_email = request.args.get('v_e')
 
     return render_template('users/new.html', valid_email=valid_email)
 
@@ -29,18 +27,20 @@ def create():
         username=username,
         password=password)
 
+    v_e = False
+
     try:
         if new_user.save():
             flash('Successfully created a user!', "success")
-            ve = 1
+            v_e = True
+
         else:
             flash("An error occurred!", "danger")
-            ve = 0
 
     except pw.IntegrityError as e:
         print(e)
 
-    return redirect(url_for("users.new", ve=ve))
+    return redirect(url_for("users.new", v_e=v_e))
 
 
 @users_blueprint.route('/<username>', methods=["GET"])

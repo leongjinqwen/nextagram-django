@@ -1,36 +1,40 @@
-{% extends "_layout.html" %} 
-
-{% block content %}
+{% extends "_layout.html" %} {% block content %}
 <div class="w-100 d-flex flex-column align-items-center my-3">
   <h1 class="my-3">Sign up here!</h1>
-  <form action="{{ url_for('users.create') }}" method="POST">
+
+  <form
+    action="{{ url_for('users.create') }}"
+    method="POST"
+    class="needs-validation"
+    id="sign-up-form"
+  >
     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
     <div class="form-group">
       <label for="email">Email address</label>
-      <input 
-        type="email" 
-        class="form-control {% if valid_email %} is-valid {% else %} is-invalid {% endif %}"
-        id="email" 
-        name="email" 
-        aria-describedby="emailHelp" 
-        placeholder="Enter email" />
+      <input
+        type="email"
+        class="form-control"
+        {# class="form-control {% if valid_email %} is-valid {% elif valid_email == 'False' %} is-invalid {% endif %}" #}
+        id="email"
+        name="email"
+        aria-describedby="emailHelp"
+        placeholder="Enter email"
+      />
 
       <small id="emailHelp" class="form-text text-muted"
         >We'll never share your email with anyone else.</small
       >
 
-      {% if valid_email == True %}
+      {% if valid_email == 'True' %}
       <div class="valid-feedback">
         Looks good!
       </div>
 
-      {% else %}
+      {% elif valid_email == 'False' %}
       <div class="invalid-feedback">
         Looks bad!
       </div>
       {% endif %}
-
-
     </div>
     <div class="form-group">
       <label for="username">Username</label>
@@ -43,7 +47,8 @@
         placeholder="Enter username"
       />
     </div>
-    <div class="form-group">
+
+    <div class="form-group has-feedback">
       <label for="password">Password</label>
       <input
         type="password"
@@ -51,9 +56,52 @@
         class="form-control"
         id="password"
         placeholder="Password"
+        minlength="8"
+        required
       />
+      <div class="invalid-feedback">
+        Please choose a longer password.
+      </div>
     </div>
+    <div class="valid-feedback">
+      Looks good!.
+    </div>
+
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
 </div>
+
+<script>
+    function validatePassword(e) {
+      if (e.target.value.length >= 8) {
+        alert("YAY");
+      }
+      return e.target.value.length >= 8;
+    }
+
+    console.log(document.getElementById("password"));
+
+    document.getElementById("password").addEventListener("input", e => {
+      validatePassword(e);
+    });
+
+  (function() {
+    'use strict';
+    window.addEventListener('load', function() {
+      // Fetch all the forms we want to apply custom Bootstrap validation styles to
+      var forms = document.getElementsByClassName('needs-validation');
+      // Loop over them and prevent submission
+      var validation = Array.prototype.filter.call(forms, function(form) {
+        form.addEventListener('submit', function(event) {
+          if (form.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        }, false);
+      });
+    }, false);
+  })();
+</script>
+
 {% endblock %}
