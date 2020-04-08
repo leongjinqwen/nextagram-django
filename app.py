@@ -3,8 +3,17 @@ from flask import Flask
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 import config
-from models.base_model import db
-from models.user import User
+
+# django.core.exceptions.AppRegistryNotReady: Apps aren't loaded yet.
+import django
+django.setup()
+
+from dj.models.base_model import db
+from dj.models.user import User
+from django.apps import apps
+from django.conf import settings
+
+apps.populate(settings.INSTALLED_APPS)
 
 web_dir = os.path.join(os.path.dirname(
     os.path.abspath(__file__)), 'instagram_web')
@@ -26,7 +35,7 @@ else:
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.get_by_id(user_id)
+    return User.objects.get(id=user_id)
 
 @app.before_request
 def before_request():

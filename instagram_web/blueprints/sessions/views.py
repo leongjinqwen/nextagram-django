@@ -1,6 +1,6 @@
 import peewee as pw
 from flask import Blueprint, flash, redirect, render_template, request, url_for,session,escape
-from models.user import User
+from dj.models.user import User
 from werkzeug.security import check_password_hash
 from flask_login import login_required,login_user,logout_user,current_user
 
@@ -16,7 +16,7 @@ def new():
 
 @sessions_blueprint.route('/', methods=['POST'])
 def create():
-    user = User.get_or_none(User.email==request.form.get('email'))
+    user = User.get_or_none(email=request.form.get('email'))
     if user:
     # if user found in database
         result = check_password_hash(user.password, request.form.get('password'))

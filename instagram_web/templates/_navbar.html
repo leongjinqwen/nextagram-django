@@ -24,9 +24,6 @@
         <a class="nav-link" href="{{ url_for('users.edit',id=current_user.id) }}">Edit</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('images.new') }}">Upload</a>
-      </li>
-      <li class="nav-item">
         <form action="{{ url_for('sessions.destroy') }}" method="POST" class="form-inline my-2 my-lg-0">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
           <button class="btn  my-2 my-sm-0 pl-0 text-muted" style="background-color: rgba(0,0,0,0);" type="submit">Sign Out</button>

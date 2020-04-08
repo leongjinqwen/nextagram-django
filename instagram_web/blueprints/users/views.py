@@ -1,7 +1,7 @@
 import peewee as pw
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required,current_user,login_user
-from models.user import User
+from dj.models.user import User
 from instagram_web.util.helpers import upload_file_to_s3
 from werkzeug.utils import secure_filename
 
@@ -47,7 +47,7 @@ def create():
 
 @users_blueprint.route('/<username>', methods=["GET"])
 def show(username):
-    user = User.get_or_none(username=username)
+    user = User.objects.get(username=username)
     return render_template("users/show.html",user=user)
 
 
@@ -59,7 +59,7 @@ def index():
 @users_blueprint.route('/<id>/edit', methods=['GET'])
 @login_required
 def edit(id):
-    user = User.get_by_id(id)
+    user = User.objects.get(id=id)
     if (current_user.role == "admin" or current_user.id==user.id):
         return render_template("users/edit.html",user=user)
     else:
@@ -70,7 +70,7 @@ def edit(id):
 @users_blueprint.route('/<id>', methods=['POST'])
 @login_required
 def update(id):
-    user = User.get_by_id(id)
+    user = User.objects.get(id=id)
     if current_user == user :
         user.username = request.form.get('username')
         user.email = request.form.get('email')
