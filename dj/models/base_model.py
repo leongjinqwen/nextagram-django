@@ -1,7 +1,7 @@
 import os
-# import peewee as pw
-from django.db import models
 import datetime
+from django.db import models
+from django.core.exceptions import ValidationError
 from database import db
 
 
@@ -22,20 +22,13 @@ class BaseModel(models.Model, metaclass=MyModelBase):
     updated_at = models.DateTimeField(default=datetime.datetime.now)
 
     def save(self, *args, **kwargs):
-        self.errors = []
-        self.validate()
-
-        if len(self.errors) == 0:
-            self.updated_at = datetime.datetime.now()
-            result = super(BaseModel, self).save(*args, **kwargs)
+        try:
+            self.full_clean()
+            self.save()
             return True
-        else:
-            return 0
-
-    def validate(self):
-        print(
-            f"Warning validation method not implemented for {str(type(self))}")
-        return True
+        except ValidationError as err:
+            self.errors = err.message_dict
+            return False
 
     class Meta:
         abstract = True

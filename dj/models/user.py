@@ -6,10 +6,23 @@ from .base_model import BaseModel
 import os
 from django.core.exceptions import ObjectDoesNotExist
 from playhouse.hybrid import hybrid_property
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
+
+
+class UserValidation():
+    @classmethod
+    def validate_length(klass, value):
+        if len(value) < 5:
+            raise ValidationError(
+                _('%(value)s is too short'),
+                params={'value': value},
+            )
 
 
 class User(UserMixin, BaseModel):
-    username = models.CharField(max_length=100, unique=False)
+    username = models.CharField(
+        max_length=100, unique=False, validators=[UserValidation.validate_length])
     password = models.CharField(max_length=100)
     email = models.CharField(max_length=100, unique=True)
     role = models.CharField(max_length=100, default="user")
