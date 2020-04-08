@@ -7,6 +7,3 @@ import os
 class Image(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     image_path = models.TextField(max_length=100)
-
-    class Meta:
-        db_table = "image"

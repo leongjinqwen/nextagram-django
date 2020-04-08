@@ -4,7 +4,20 @@ from django.db import models
 import datetime
 from database import db
 
-class BaseModel(models.Model):
+
+class MyModelBase(models.base.ModelBase):
+    def __new__(cls, name, bases, attrs, **kwargs):
+        if name != "BaseModel":
+            class Meta:
+                db_table = name.lower()
+
+            attrs["Meta"] = Meta
+
+        r = super().__new__(cls, name, bases, attrs, **kwargs)
+        return r
+
+
+class BaseModel(models.Model, metaclass=MyModelBase):
     created_at = models.DateTimeField(default=datetime.datetime.now)
     updated_at = models.DateTimeField(default=datetime.datetime.now)
 
@@ -23,8 +36,6 @@ class BaseModel(models.Model):
         print(
             f"Warning validation method not implemented for {str(type(self))}")
         return True
-
-    
 
     class Meta:
         abstract = True
